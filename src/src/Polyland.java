@@ -1,53 +1,185 @@
 import java.util.Scanner;
-
+import java.util.ArrayList;
 
 
 public class Polyland {
-	static Scanner scanner = new Scanner(System.in);
-	final int YEAR_NOW = 2022;
-	final int MONTH_NOW = 4;
-	final int TODAY = 18;
+	Scanner scanner = new Scanner(System.in);
+	OrderData orderVariable;
+	ArrayList <OrderData> listMaker = new ArrayList <OrderData>();
 	
-	final int AGE_GROUP_BABY = 1;
-	final int AGE_GROUP_KID = 2;
-	final int AGE_GROUP_YOUNG = 3;
-	final int AGE_GROUP_ADULT = 4;
-	final int AGE_GROUP_ELDER = 5;
+
+	int printTop () {
+		System.out.printf("ê¶Œì¢…ì„ ì„ íƒí•˜ì„¸ìš”.\n1. ì£¼ê°„ê¶Œ\n2. ì•¼ê°„ê¶Œ\n");
+		System.out.printf("ì„ íƒ: ");
+		orderVariable.dayOrNight = scanner.nextInt();
+		
+		System.out.printf("****************************************\n");
+		System.out.printf("ì£¼ë¯¼ë“±ë¡ë²ˆí˜¸ 7ë²ˆì§¸ ìë¦¬ê¹Œì§€ ì…ë ¥í•˜ì„¸ìš”\n");
+		System.out.printf("ì£¼ë¯¼ë²ˆí˜¸: ");
+		orderVariable.juminString = scanner.next();
+		for (int index = 0; index <orderVariable.juminString.length(); index++) {
+			orderVariable.jumin[index] = orderVariable.juminString.charAt(index);
+		}
+		
+		do {
+		System.out.printf("****************************************\n");
+		System.out.printf("ëª‡ ì¥ì„ ì£¼ë¬¸í•˜ì‹œë‚˜ìš”? (10ì¥ ì´ˆê³¼ ì‹œ ë¬´íš¨)\n"); 
+		System.out.printf("ìˆ˜ëŸ‰: ");
+		orderVariable.numberOfTicket = scanner.nextInt();
+		} while (orderVariable.numberOfTicket > 10);
+		
+		System.out.printf("****************************************\n");
+		System.out.printf("ìš°ëŒ€ì‚¬í•­ì„ ì„ íƒí•˜ì„¸ìš”.\n");
+		System.out.printf("1. ì¥ì• ì¸\n2. êµ­ê°€ìœ ê³µì\n3. ì„ì‚°ë¶€\n4. íœ´ê°€ì¥ë³‘\n5. ë‹¤ë‘¥ì´\n6. ì—†ìŒ\n");
+		System.out.printf("ì„ íƒ: ");
+		orderVariable.discountCondition = scanner.nextInt();
+			
+			return 0;
+	}
+
+
+	void ageCal () {
+		if ((orderVariable.jumin[6] - '0') == 1 || (orderVariable.jumin[6] - '0') == 2) {
+			orderVariable.birthYear = 1900 + ((orderVariable.jumin[0] - '0') * 10 + (orderVariable.jumin[1] - '0'));
+		} else if ((orderVariable.jumin[6] - '0') == 3 || (orderVariable.jumin[6] - '0') == 4) {
+			orderVariable.birthYear = 2000 + ((orderVariable.jumin[0] - '0') * 10 + (orderVariable.jumin[1] - '0'));
+		}
+		
+		orderVariable.birthMonth = ((orderVariable.jumin[2] - '0') * 10) + (orderVariable.jumin[3] - '0');
+		orderVariable.birthDate = ((orderVariable.jumin[4] - '0') * 10) + (orderVariable.jumin[5] - '0');
+			
+			 
+			if (StaticValue.MONTH_NOW > orderVariable.birthMonth || (StaticValue.MONTH_NOW == orderVariable.birthMonth && StaticValue.TODAY >= orderVariable.birthDate)) {
+				orderVariable.age = StaticValue.YEAR_NOW - orderVariable.birthYear;
+			} else {
+				orderVariable.age = StaticValue.YEAR_NOW - orderVariable.birthYear - 1;
+			}
+			
+			if (orderVariable.age >=0 && orderVariable.age < 3) {
+				orderVariable.ageGroup = StaticValue.AGE_GROUP_BABY;
+			} else if (orderVariable.age >= 3 && orderVariable.age < 13) {
+				orderVariable.ageGroup = StaticValue.AGE_GROUP_KID;
+			} else if (orderVariable.age >= 13 && orderVariable.age < 19 ) {
+				orderVariable.ageGroup = StaticValue.AGE_GROUP_YOUNG;
+			}else if (orderVariable.age >= 19 && orderVariable.age < 65) {
+				orderVariable.ageGroup = StaticValue.AGE_GROUP_ADULT;
+			}else if (orderVariable.age >= 65) {
+				orderVariable.ageGroup = StaticValue.AGE_GROUP_ELDER;
+		}
+		
+	}
 	
-	final int SAVE_TICKET_TYPE = 0;
-	final int SAVE_AGE_GROUP = 1;
-	final int SAVE_TICKET_COUNT = 2;
-	final int SAVE_PRICE_PER_PURCHASE = 3;
-	final int SAVE_DISCOUNT = 4;
+	void ticketChoice (int choice) {
+				if (choice == 1) {
+				if (orderVariable.age >= 0 && orderVariable.age < 3 || (orderVariable.age > 64)) {
+					orderVariable.price = StaticValue.BABY * orderVariable.numberOfTicket;
+				} else if (orderVariable.age >= 3 && orderVariable.age < 13) {
+					orderVariable.price = StaticValue.KID_DAY * orderVariable.numberOfTicket;
+				} else if (orderVariable.age >= 13 && orderVariable.age < 19) {
+					orderVariable.price = StaticValue.YOUNG_DAY * orderVariable.numberOfTicket;
+				} else if (orderVariable.age >= 19 &&orderVariable.age < 65) {
+					orderVariable.price = StaticValue.ADULT_DAY * orderVariable.numberOfTicket;
+				}
+				orderVariable.ticketTypeName = StaticValue.TICKET_TYPE_DAY;
+			}
+			
+			if (choice == 2) {
+				if (orderVariable.age >= 0 && orderVariable.age <= 3 || orderVariable.age >= 65) {
+					orderVariable.price = StaticValue.BABY * orderVariable.numberOfTicket;
+				} else if (orderVariable.age >= 13 && orderVariable.age < 19) {
+					orderVariable.price = StaticValue.YOUNG_NIGHT * orderVariable.numberOfTicket;
+				} else if (orderVariable.age >= 19 && orderVariable.age < 65) {
+					orderVariable.price = StaticValue.ADULT_NIGHT * orderVariable.numberOfTicket;
+				}
+				orderVariable.ticketTypeName = StaticValue.TICKET_TYPE_NIGHT;
+			}
+	}
 	
-	final int BABY = 15000;
-	final int KID_DAY = 46000;
-	final int KID_NIGHT = 35000;
-	final int YOUNG_DAY = 52000;
-	final int YOUNG_NIGHT = 41000;
-	final int ADULT_DAY = 59000; 
-	final int ADULT_NIGHT = 47000; 
+	void discount (int dcCondition) {
+			if (dcCondition == 1) {
+				orderVariable.price = orderVariable.price - (int)(orderVariable.price * StaticValue.DC_DIS_NAT_PREG);
+				orderVariable.discountType = StaticValue.DC_TYPE_DISABLED;
+			} else if (dcCondition == 2) {
+				orderVariable.price = orderVariable.price - (int)(orderVariable.price * StaticValue.DC_DIS_NAT_PREG);
+				orderVariable.discountType = StaticValue.DC_TYPE_MERIT;
+			} else if (dcCondition == 3) {
+				orderVariable.price = orderVariable.price - (int)(orderVariable.price * StaticValue.DC_DIS_NAT_PREG);
+				orderVariable.discountType = StaticValue.DC_TYPE_PREGNANT;
+			} else if (orderVariable.discountCondition == 4) {
+				orderVariable.price = orderVariable.price - (int)(orderVariable.price * StaticValue.DC_SOLDIER);
+				orderVariable.discountType = StaticValue.DC_TYPE_SOLDIER;
+			} else if (orderVariable.discountCondition == 5) {
+				orderVariable.price = orderVariable.price - (int)(orderVariable.price * StaticValue.DC_MULTIKID);
+				orderVariable.discountType = StaticValue.DC_TYPE_MULTILKID;
+			}
+			
+			
+	}
 	
-	final float DC_DIS_NAT_PREG = 0.5f;
-	final float DC_SOLDIER = 0.49f;
-	final float DC_MULTIKID = 0.3f;
+	/*int saveData () {
+			orderList[roundCount][StaticValue.SAVE_TICKET_TYPE] = dayOrNight;
+			orderList[roundCount][StaticValue.SAVE_AGE_GROUP] = ageGroup;
+			orderList[roundCount][StaticValue.SAVE_TICKET_COUNT] = numberOfTicket;
+			orderList[roundCount][StaticValue.SAVE_PRICE_PER_PURCHASE] = price;
+			orderList[roundCount][StaticValue.SAVE_DISCOUNT] = discountCondition;
+			roundCount ++;
+		return 0;
+	}*/
 	
-	int dayOrNight;
-	char[] jumin = new char[7];
-	String juminString;
-	int birthYear;
-	int birthMonth;
-	int birthDate;
-	int age;
-	int ageGroup;
-	int numberOfTicket = 0;
-	int discountCondition;
-	int price = 0;
-	int priceFinal = 0; 
-	int repeat;
-	int roundCount = 0;
-	int[][] orderList = new int [10][10];
+	void printMiddle (){
+		System.out.printf("****************************************\n");
+		System.out.printf("ê°€ê²©ì€ %dì›ì…ë‹ˆë‹¤. ê°ì‚¬í•©ë‹ˆë‹¤.\n", orderVariable.price);
+		System.out.printf("ê³„ì† ë°œê¶Œí•˜ì‹œê² ìŠµë‹ˆê¹Œ?[1. ì˜ˆ / 2. ì•„ë‹ˆì˜¤]\n");
+		System.out.printf("ì„ íƒ: ");
+		orderVariable.repeat = scanner.nextInt();
+		System.out.printf("\n**************************************\n");
+		
+	}
 	
+	void printBottom() {
+		System.out.printf("í‹°ì¼“ ë°œê¶Œì„ ì¢…ë£Œí•©ë‹ˆë‹¤. ê°ì‚¬í•©ë‹ˆë‹¤.\n");
+		System.out.printf("\n=============í´ë¦¬ëœë“œ==============\n");
+	
+	/*for (int index = 0; index < roundCount; index++) { //ï¿½Ù½ï¿½,,,
+		if (orderList[index][StaticValue.SAVE_TICKET_TYPE] == 1) {
+			System.out.printf("ì£¼ê°„ê¶Œ\t");
+		} else if (orderList[index][StaticValue.SAVE_TICKET_TYPE] == 2) {
+			System.out.printf("ì•¼ê°„ê¶Œ\t");
+		}
+		
+		if (orderList[index][StaticValue.SAVE_AGE_GROUP] == 1) {
+			System.out.printf("ë² ì´ë¹„\t");
+		} else if (orderList[index][StaticValue.SAVE_AGE_GROUP] == 2) {
+			System.out.printf("ì–´ë¦°ì´\t");
+		} else if (orderList[index][StaticValue.SAVE_AGE_GROUP] == 3) {
+			System.out.printf("ì²­ì†Œë…„\t"); 
+		} else if (orderList[index][StaticValue.SAVE_AGE_GROUP] == 4) {
+			System.out.printf("ì„±ì¸\t");
+		} else if (orderList[index][StaticValue.SAVE_AGE_GROUP] == 5) {
+			System.out.printf("ë…¸ì¸\t");
+		}
+		
+		System.out.printf ("%d ì¥\t", orrderList[index][StaticValue.SAVE_TICKET_COUNT]);
+		System.out.printf("%5d ì›\t", orderList[index][StaticValue.SAVE_PRICE_PER_PURCHASE]);
+		
+		if (orderList[index][StaticValue.SAVE_DISCOUNT] == 1) {
+			System.out.printf(" (ì¥ì• ì¸ í• ì¸)\n");
+		} else if (orderList[index][StaticValue.SAVE_DISCOUNT] == 2) {
+			System.out.printf(" (êµ­ê°€ìœ ê³µì í• ì¸)\n");
+		} else if (orderList[index][StaticValue.SAVE_DISCOUNT] == 3) {
+			System.out.printf(" (ì„ì‚°ë¶€ í• ì¸)\n");
+		} else if (orderList[index][StaticValue.SAVE_DISCOUNT] == 4) {
+			System.out.printf(" (íœ´ê°€ì¥ë³‘ í• ì¸)\n");
+		} else if (orderList[index][StaticValue.SAVE_DISCOUNT] == 5) {
+			System.out.printf(" (ë‹¤ë‘¥ì´ í• ì¸)\n");
+		} else {
+			System.out.printf(" (í• ì¸ ì—†ìŒ)\n");
+		}
+		
+	}*/
+	System.out.printf("==================================\n");
+	System.out.printf("ì´ ê²°ì œì•¡ì€ %dì›ì…ë‹ˆë‹¤.", OrderData.priceFinal);
+	}	
 	public static void main (String[] args) {
 		Polyland poly = new Polyland(); 
 		do {
@@ -55,185 +187,22 @@ public class Polyland {
 					
 			poly.printTop();
 			
-			poly.ageCal(poly.jumin);
+			poly.ageCal();
 			
-			poly.ticketChoice(poly.dayOrNight);
+			poly.ticketChoice(poly.orderVariable.dayOrNight);
 			
-			poly.discount(poly.discountCondition);
+			poly.discount(poly.orderVariable.discountCondition);
 			
-			poly.priceFinal = poly.priceFinal + poly.price;
+			poly.orderVariable.priceFinal = poly.orderVariable.priceFinal + poly.orderVariable.price;
 			
-			poly.saveData();
+			//poly.saveData();
+			
 			
 			poly.printMiddle();
 			
-		
 	
-		} while (poly.repeat == 1);
+		} while (poly.orderVariable.repeat == 1);
 	
-		poly.printBottom();
+		//poly.printBottom();
 	}
-	
-
-	int printTop () {
-		System.out.printf("±ÇÁ¾À» ¼±ÅÃÇÏ¼¼¿ä.\n1. ÁÖ°£±Ç\n2. ¾ß°£±Ç\n");
-		System.out.printf("¼±ÅÃ: ");
-		dayOrNight = scanner.nextInt();
-		
-		System.out.printf("****************************************\n");
-		System.out.printf("ÁÖ¹Îµî·Ï¹øÈ£ 7¹øÂ° ÀÚ¸®±îÁö ÀÔ·ÂÇÏ¼¼¿ä\n");
-		System.out.printf("ÁÖ¹Î¹øÈ£: ");
-		juminString = scanner.next();
-		for (int index = 0; index <juminString.length(); index++) {
-			jumin[index] = juminString.charAt(index);
-		}
-		
-		do {
-		System.out.printf("****************************************\n");
-		System.out.printf("¸î ÀåÀ» ÁÖ¹®ÇÏ½Ã³ª¿ä? (10Àå ÃÊ°ú ½Ã ¹«È¿)\n"); 
-		System.out.printf("¼ö·®: ");
-		numberOfTicket = scanner.nextInt();
-		} while (numberOfTicket > 10);
-		
-		System.out.printf("****************************************\n");
-		System.out.printf("¿ì´ë»çÇ×À» ¼±ÅÃÇÏ¼¼¿ä.\n");
-		System.out.printf("1. Àå¾ÖÀÎ\n2. ±¹°¡À¯°øÀÚ\n3. ÀÓ»êºÎ\n4. ÈŞ°¡Àåº´\n5. ´ÙµÕÀÌ\n6. ¾øÀ½\n");
-		System.out.printf("¼±ÅÃ: ");
-		discountCondition = scanner.nextInt();
-			
-			return 0;
-	}
-
-
-	int ageCal (char socialNumber[]) {
-		if ((socialNumber[6] - '0') == 1 || (socialNumber[6] - '0') == 2) {
-			birthYear = 1900 + ((jumin[0] - '0') * 10 + (jumin[1] - '0'));
-		} else if ((socialNumber[6] - '0') == 3 || (socialNumber[6] - '0') == 4) {
-			birthYear = 2000 + ((jumin[0] - '0') * 10 + (jumin[1] - '0'));
-		}
-		//»ı¿ù = ÁÖ¹Î¹øÈ£ 3,4¹øÂ° ÀÚ¸®
-		birthMonth = ((socialNumber[2] - '0') * 10) + (socialNumber[3] - '0');
-		birthDate = ((socialNumber[4] - '0') * 10) + (socialNumber[5] - '0');
-			
-			 
-			if (MONTH_NOW > birthMonth || (MONTH_NOW == birthMonth && TODAY >= birthDate)) {
-				age = YEAR_NOW - birthYear;
-			} else {
-				age = YEAR_NOW - birthYear - 1;
-			}
-			
-			if (age >=0 && age < 3) {
-				ageGroup = AGE_GROUP_BABY;
-			} else if (age >= 3 && age < 13) {
-				ageGroup = AGE_GROUP_KID;
-			} else if (age >= 13 && age < 19 ) {
-				ageGroup = AGE_GROUP_YOUNG;
-			}else if (age >= 19 && age < 65) {
-				ageGroup = AGE_GROUP_ADULT;
-			}else if (age >= 65) {
-				ageGroup = AGE_GROUP_ELDER;
-		}
-		return 0;
-	}
-	
-	int ticketChoice (int choice) {
-				if (choice == 1) {
-				if (age >= 0 && age < 3 || (age > 64)) {
-					price = BABY * numberOfTicket;
-				} else if (age >= 3 && age < 13) {
-					price = KID_DAY * numberOfTicket;
-				} else if (age >= 13 && age < 19) {
-					price = YOUNG_DAY * numberOfTicket;
-				} else if (age >= 19 && age < 65) {
-					price = ADULT_DAY * numberOfTicket;
-				}
-			}
-			
-			if (choice == 2) {
-				if (age >= 0 && age <= 3 || age >= 65) {
-					price = BABY * numberOfTicket;
-				} else if (age >= 13 && age < 19) {
-					price = YOUNG_NIGHT * numberOfTicket;
-				} else if (age >= 19 && age < 65) {
-					price = ADULT_NIGHT * numberOfTicket;
-				}
-			}
-		return 0;
-	}
-	
-	int discount (int dcCondition) {
-			if (dcCondition == 1 || dcCondition == 2 || dcCondition == 3) {
-				price = price - (int)(price * DC_DIS_NAT_PREG);
-			} else if (discountCondition == 4) {
-				price = price - (int)(price * DC_SOLDIER);
-			} else if (discountCondition == 5) {
-				price = price - (int)(price * DC_MULTIKID);
-			}
-		return 0;
-	}
-	
-	int saveData () {
-			orderList[roundCount][SAVE_TICKET_TYPE] = dayOrNight;
-			orderList[roundCount][SAVE_AGE_GROUP] = ageGroup;
-			orderList[roundCount][SAVE_TICKET_COUNT] = numberOfTicket;
-			orderList[roundCount][SAVE_PRICE_PER_PURCHASE] = price;
-			orderList[roundCount][SAVE_DISCOUNT] = discountCondition;
-			roundCount ++;
-		return 0;
-	}
-	
-	void printMiddle (){
-		System.out.printf("****************************************\n");
-		System.out.printf("°¡°İÀº %d¿øÀÔ´Ï´Ù. °¨»çÇÕ´Ï´Ù.\n", price);
-		System.out.printf("°è¼Ó ¹ß±ÇÇÏ½Ã°Ú½À´Ï±î?[1. ¿¹ / 2. ¾Æ´Ï¿À]\n");
-		System.out.printf("¼±ÅÃ: ");
-		repeat = scanner.nextInt();
-		System.out.printf("\n**************************************\n");
-		
-	}
-	
-	void printBottom() {
-		System.out.printf("Æ¼ÄÏ ¹ß±ÇÀ» Á¾·áÇÕ´Ï´Ù. °¨»çÇÕ´Ï´Ù.\n");
-		System.out.printf("\n=============Æú¸®·£µå==============\n");
-	
-	for (int index = 0; index < roundCount; index++) { //´Ù½Ã,,,
-		if (orderList[index][SAVE_TICKET_TYPE] == 1) {
-			System.out.printf("ÁÖ°£±Ç\t");
-		} else if (orderList[index][SAVE_TICKET_TYPE] == 2) {
-			System.out.printf("¾ß°£±Ç\t");
-		}
-		
-		if (orderList[index][SAVE_AGE_GROUP] == 1) {
-			System.out.printf("º£ÀÌºñ\t");
-		} else if (orderList[index][SAVE_AGE_GROUP] == 2) {
-			System.out.printf("¾î¸°ÀÌ\t");
-		} else if (orderList[index][SAVE_AGE_GROUP] == 3) {
-			System.out.printf("Ã»¼Ò³â\t"); 
-		} else if (orderList[index][SAVE_AGE_GROUP] == 4) {
-			System.out.printf("¼ºÀÎ\t");
-		} else if (orderList[index][SAVE_AGE_GROUP] == 5) {
-			System.out.printf("³ëÀÎ\t");
-		}
-		
-		System.out.printf ("%d Àå\t", orderList[index][SAVE_TICKET_COUNT]);
-		System.out.printf("%5d ¿ø\t", orderList[index][SAVE_PRICE_PER_PURCHASE]);
-		
-		if (orderList[index][SAVE_DISCOUNT] == 1) {
-			System.out.printf(" (Àå¾ÖÀÎ ÇÒÀÎ)\n");
-		} else if (orderList[index][SAVE_DISCOUNT] == 2) {
-			System.out.printf(" (±¹°¡À¯°øÀÚ ÇÒÀÎ)\n");
-		} else if (orderList[index][SAVE_DISCOUNT] == 3) {
-			System.out.printf(" (ÀÓ»êºÎ ÇÒÀÎ)\n");
-		} else if (orderList[index][SAVE_DISCOUNT] == 4) {
-			System.out.printf(" (ÈŞ°¡Àåº´ ÇÒÀÎ)\n");
-		} else if (orderList[index][SAVE_DISCOUNT] == 5) {
-			System.out.printf(" (´ÙµÕÀÌ ÇÒÀÎ)\n");
-		} else {
-			System.out.printf(" (ÇÒÀÎ ¾øÀ½)\n");
-		}
-		
-	}
-	System.out.printf("==================================\n");
-	System.out.printf("ÃÑ °áÁ¦¾×Àº %d¿øÀÔ´Ï´Ù.", priceFinal);
-	}	
 }
